@@ -28,18 +28,18 @@ button1_pin = 22 # pin for the big red button
 button2_pin = 18 # pin for button to shutdown the pi
 button3_pin = 16 # pin for button to end the program, but not shutdown the pi
 
-post_online = 1 # default 1. Change to 0 if you don't want to upload pics.
+post_online = 0 # default 1. Change to 0 if you don't want to upload pics.
 total_pics = 4 # number of pics to be taken
 capture_delay = 2 # delay between pics
 prep_delay = 3 # number of seconds at step 1 as users prep to have photo taken
 gif_delay = 100 # How much time between frames in the animated gif
-restart_delay = 5 # how long to display finished message before beginning a new session
+restart_delay = 2 # how long to display finished message before beginning a new session
 
-monitor_w = 800
-monitor_h = 480
-transform_x = 640 # how wide to scale the jpg when replaying
-transfrom_y = 480 # how high to scale the jpg when replaying
-offset_x = 80 # how far off to left corner to display photos
+monitor_w = 1280#800
+monitor_h = 800#480
+transform_x = 1280#640 # how wide to scale the jpg when replaying
+transfrom_y = 800#480 # how high to scale the jpg when replaying
+offset_x = 0#80 # how far off to left corner to display photos
 offset_y = 0 # how far off to left corner to display photos
 replay_delay = 1 # how much to wait in-between showing pics on-screen after taking
 replay_cycles = 2 # how many times to show each photo on-screen after taking
@@ -97,21 +97,21 @@ def exit_photobooth(channel):
     
 def clear_pics(foo): #why is this function being passed an arguments?
     #delete files in folder on startup
-	files = glob.glob(config.file_path + '*')
-	for f in files:
-		os.remove(f) 
-	#light the lights in series to show completed
-	print "Deleted previous pics"
-	GPIO.output(led1_pin,False); #turn off the lights
-	GPIO.output(led2_pin,False);
-	GPIO.output(led3_pin,False);
-	GPIO.output(led4_pin,False)
-	pins = [led1_pin, led2_pin, led3_pin, led4_pin]
-	for p in pins:
-		GPIO.output(p,True); 
-		sleep(0.25)
-		GPIO.output(p,False);
-		sleep(0.25)
+    files = glob.glob(config.file_path + '*')
+    for f in files:
+        os.remove(f) 
+    #light the lights in series to show completed
+    print "Deleted previous pics"
+    GPIO.output(led1_pin,False); #turn off the lights
+    GPIO.output(led2_pin,False);
+    GPIO.output(led3_pin,False);
+    GPIO.output(led4_pin,False)
+    pins = [led1_pin, led2_pin, led3_pin, led4_pin]
+    for p in pins:
+        GPIO.output(p,True); 
+        sleep(0.25)
+        GPIO.output(p,False);
+        sleep(0.25)
       
 def is_connected():
   try:
@@ -130,7 +130,7 @@ def init_pygame():
     pygame.init()
     size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
     pygame.display.set_caption('Photo Booth Pics')
-    pygame.mouse.set_visible(False) #hide the mouse cursor	
+    pygame.mouse.set_visible(False) #hide the mouse cursor    
     return pygame.display.set_mode(size, pygame.FULLSCREEN)
 
 def show_image(image_path):
@@ -157,96 +157,96 @@ def display_pics(jpg_group):
     except Alarm:
         raise KeyboardInterrupt
     for i in range(0, replay_cycles): #show pics a few times
-		for i in range(1, total_pics+1): #show each pic
-			filename = config.file_path + jpg_group + "-0" + str(i) + ".jpg"
+        for i in range(1, total_pics+1): #show each pic
+            filename = config.file_path + jpg_group + "-0" + str(i) + ".jpg"
                         show_image(filename);
-			time.sleep(replay_delay) # pause 
-				
+            time.sleep(replay_delay) # pause 
+                
 # define the photo taking function for when the big button is pressed 
 def start_photobooth(): 
-	################################# Begin Step 1 ################################# 
-	show_image(real_path + "/blank.png")
-	print "Get Ready"
-	GPIO.output(led1_pin,True);
-	show_image(real_path + "/instructions.png")
-	sleep(prep_delay) 
-	GPIO.output(led1_pin,False)
+    ################################# Begin Step 1 ################################# 
+    show_image(real_path + "/blank.png")
+    print "Get Ready"
+    GPIO.output(led1_pin,True);
+    show_image(real_path + "/instructions.png")
+    sleep(prep_delay) 
+    GPIO.output(led1_pin,False)
 
-	show_image(real_path + "/blank.png")
-	
-	camera = picamera.PiCamera()
-	pixel_width = 500 #use a smaller size to process faster, and tumblr will only take up to 500 pixels wide for animated gifs
-	pixel_height = monitor_h * pixel_width // monitor_w
-	camera.resolution = (pixel_width, pixel_height) 
-	camera.vflip = True
-	camera.hflip = False
-	camera.saturation = -100 # comment out this line if you want color images
-	camera.start_preview()
-	
-	sleep(2) #warm up camera
+    show_image(real_path + "/blank.png")
+    
+    camera = picamera.PiCamera()
+    pixel_width = 1280#500 #use a smaller size to process faster, and tumblr will only take up to 500 pixels wide for animated gifs
+    pixel_height = 800#monitor_h * pixel_width // monitor_w
+    camera.resolution = (pixel_width, pixel_height) 
+    camera.vflip = True
+    camera.hflip = False
+#    camera.saturation = -100 # comment out this line if you want color images
+    camera.start_preview()
+    
+    sleep(2) #warm up camera
 
-	################################# Begin Step 2 #################################
-	print "Taking pics" 
-	now = time.strftime("%Y-%m-%d-%H:%M:%S") #get the current date and time for the start of the filename
-	try: #take the photos
-		for i, filename in enumerate(camera.capture_continuous(config.file_path + now + '-' + '{counter:02d}.jpg')):
-			GPIO.output(led2_pin,True) #turn on the LED
-			print(filename)
-			sleep(0.25) #pause the LED on for just a bit
-			GPIO.output(led2_pin,False) #turn off the LED
-			sleep(capture_delay) # pause in-between shots
-			if i == total_pics-1:
-				break
-	finally:
-		camera.stop_preview()
-		camera.close()
-	########################### Begin Step 3 #################################
-	print "Creating an animated gif" 
-	if post_online:
-		show_image(real_path + "/uploading.png")
-	else:
-		show_image(real_path + "/processing.png")
+    ################################# Begin Step 2 #################################
+    print "Taking pics" 
+    now = time.strftime("%Y-%m-%d-%H:%M:%S") #get the current date and time for the start of the filename
+    try: #take the photos
+        for i, filename in enumerate(camera.capture_continuous(config.file_path + now + '-' + '{counter:02d}.jpg')):
+            GPIO.output(led2_pin,True) #turn on the LED
+            print(filename)
+            sleep(0.25) #pause the LED on for just a bit
+            GPIO.output(led2_pin,False) #turn off the LED
+            sleep(capture_delay) # pause in-between shots
+            if i == total_pics-1:
+                break
+    finally:
+        camera.stop_preview()
+        camera.close()
+    ########################### Begin Step 3 #################################
+    print "Creating an animated gif" 
+    if post_online:
+        show_image(real_path + "/uploading.png")
+    else:
+        show_image(real_path + "/processing.png")
 
-	GPIO.output(led3_pin,True) #turn on the LED
-	graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + config.file_path + now + "*.jpg " + config.file_path + now + ".gif" 
-	os.system(graphicsmagick) #make the .gif
-	print "Uploading to tumblr. Please check " + config.tumblr_blog + ".tumblr.com soon."
+    GPIO.output(led3_pin,True) #turn on the LED
+    graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + config.file_path + now + "*.jpg " + config.file_path + now + ".gif" 
+    os.system(graphicsmagick) #make the .gif
+    print "Uploading to tumblr. Please check " + config.tumblr_blog + ".tumblr.com soon."
 
-	if post_online: # turn off posting pics online in the variable declarations at the top of this document
-		connected = is_connected() #check to see if you have an internet connection
-		while connected: 
-			try:
-				file_to_upload = config.file_path + now + ".gif"
-				client.create_photo(config.tumblr_blog, state="published", tags=["drumminhandsPhotoBooth"], data=file_to_upload)
-				break
-			except ValueError:
-				print "Oops. No internect connection. Upload later."
-				try: #make a text file as a note to upload the .gif later
-					file = open(config.file_path + now + "-FILENOTUPLOADED.txt",'w')   # Trying to create a new file or open one
-					file.close()
-				except:
-					print('Something went wrong. Could not write file.')
-					sys.exit(0) # quit Python
-	GPIO.output(led3_pin,False) #turn off the LED
-	
-	########################### Begin Step 4 #################################
-	GPIO.output(led4_pin,True) #turn on the LED
-	try:
-		display_pics(now)
-	except Exception, e:
-		tb = sys.exc_info()[2]
-		traceback.print_exception(e.__class__, e, tb)
-	pygame.quit()
-	print "Done"
-	GPIO.output(led4_pin,False) #turn off the LED
-	
-	if post_online:
-		show_image(real_path + "/finished.png")
-	else:
-		show_image(real_path + "/finished2.png")
-	
-	time.sleep(restart_delay)
-	show_image(real_path + "/intro.png");
+    if post_online: # turn off posting pics online in the variable declarations at the top of this document
+        connected = is_connected() #check to see if you have an internet connection
+        while connected: 
+            try:
+                file_to_upload = config.file_path + now + ".gif"
+                client.create_photo(config.tumblr_blog, state="published", tags=["drumminhandsPhotoBooth"], data=file_to_upload)
+                break
+            except ValueError:
+                print "Oops. No internect connection. Upload later."
+                try: #make a text file as a note to upload the .gif later
+                    file = open(config.file_path + now + "-FILENOTUPLOADED.txt",'w')   # Trying to create a new file or open one
+                    file.close()
+                except:
+                    print('Something went wrong. Could not write file.')
+                    sys.exit(0) # quit Python
+    GPIO.output(led3_pin,False) #turn off the LED
+    
+    ########################### Begin Step 4 #################################
+    GPIO.output(led4_pin,True) #turn on the LED
+    try:
+        display_pics(now)
+    except Exception, e:
+        tb = sys.exc_info()[2]
+        traceback.print_exception(e.__class__, e, tb)
+    pygame.quit()
+    print "Done"
+    GPIO.output(led4_pin,False) #turn off the LED
+    
+    if post_online:
+        show_image(real_path + "/finished.png")
+    else:
+        show_image(real_path + "/finished2.png")
+    
+    time.sleep(restart_delay)
+    show_image(real_path + "/intro.png");
 
 ####################
 ### Main Program ###
@@ -280,5 +280,5 @@ show_image(real_path + "/intro.png");
 
 while True:
         GPIO.wait_for_edge(button1_pin, GPIO.FALLING)
-	time.sleep(0.2) #debounce
-	start_photobooth()
+    time.sleep(0.2) #debounce
+    start_photobooth()
