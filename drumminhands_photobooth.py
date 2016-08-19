@@ -159,7 +159,7 @@ def display_pics(jpg_group):
     for i in range(0, replay_cycles): #show pics a few times
         for i in range(1, total_pics+1): #show each pic
             filename = config.file_path + jpg_group + "-0" + str(i) + ".jpg"
-                        show_image(filename);
+            show_image(filename);
             time.sleep(replay_delay) # pause 
                 
 # define the photo taking function for when the big button is pressed 
@@ -279,6 +279,6 @@ GPIO.output(led4_pin,False);
 show_image(real_path + "/intro.png");
 
 while True:
-        GPIO.wait_for_edge(button1_pin, GPIO.FALLING)
-    time.sleep(0.2) #debounce
-    start_photobooth()
+  GPIO.wait_for_edge(button1_pin, GPIO.FALLING)
+  time.sleep(0.2) #debounce
+  start_photobooth()
