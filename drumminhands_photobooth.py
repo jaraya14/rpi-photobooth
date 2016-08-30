@@ -29,6 +29,7 @@ button2_pin = 18 # pin for button to shutdown the pi
 button3_pin = 16 # pin for button to end the program, but not shutdown the pi
 
 post_online = 0 # default 1. Change to 0 if you don't want to upload pics.
+create_gif = 0 # default 1. Change to 0 if you don't want the GIF created.  Must be 1 if you want post online to work.
 total_pics = 4 # number of pics to be taken
 capture_delay = 2 # delay between pics
 prep_delay = 3 # number of seconds at step 1 as users prep to have photo taken
@@ -201,18 +202,19 @@ def start_photobooth():
         camera.stop_preview()
         camera.close()
     ########################### Begin Step 3 #################################
-    print "Creating an animated gif" 
-    if post_online:
+    if create_gif:#Added code to turn off GIF creation
+      print "Creating an animated gif" 
+      if post_online:
         show_image(real_path + "/uploading.png")
-    else:
+      else:
         show_image(real_path + "/processing.png")
 
-    GPIO.output(led3_pin,True) #turn on the LED
-    graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + config.file_path + now + "*.jpg " + config.file_path + now + ".gif" 
-    os.system(graphicsmagick) #make the .gif
-    print "Uploading to tumblr. Please check " + config.tumblr_blog + ".tumblr.com soon."
+      GPIO.output(led3_pin,True) #turn on the LED
+      graphicsmagick = "gm convert -delay " + str(gif_delay) + " " + config.file_path + now + "*.jpg " + config.file_path + now + ".gif" 
+      os.system(graphicsmagick) #make the .gif
+      print "Uploading to tumblr. Please check " + config.tumblr_blog + ".tumblr.com soon."
 
-    if post_online: # turn off posting pics online in the variable declarations at the top of this document
+      if post_online: # turn off posting pics online in the variable declarations at the top of this document
         connected = is_connected() #check to see if you have an internet connection
         while connected: 
             try:
