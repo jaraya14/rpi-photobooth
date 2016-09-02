@@ -15,7 +15,7 @@ Inteded Changes for this branch:
 1) Add party themed images to instruction screens.<p/>
 2) <strike>Fix code to only take 4 pictures.  The code take 5 pictures but only displays 4.  I suspect there is a bug in the loop while taking pictures.</strike><p/>
 3) <strike>Comment out the GIF creation code or put in a variable to switch this on and off as needed.</strike><p/>
-4) <strike>dd code to create a montage image from the 4 images that are created.  Add comment in the #of pictures taken variable to alert a user that the montage expects 4 images.</strike><p/>
+4) <strike>Add code to create a montage image from the 4 images that are created.  Add comment in the #of pictures taken variable to alert a user that the montage expects 4 images.</strike><p/>
 5) Include code to use DSLR.<p/>
 
 Parking lot for future enhancements:<p/>
