@@ -13,12 +13,10 @@ This requires:
 Inteded Changes for this branch:
 
 1) Add party themed images to instruction screens.<p/>
-2) Fix code to only take 4 pictures.  The code take 5 pictures but only displays 4.  I suspect there is a bug in the loop while taking pictures.<p/>
-3) Comment out the GIF creation code or put in a variable to switch this on and off as needed.<p/>
-4) Add code to create a montage image from the 4 images that are created.  Add comment in the #of pictures taken variable to alert a user that the montage expects 4 images.<p/>
-5) Change code to display montage for 4 seconds instead of iterrating each single picture.<p/>
-6) Include code to use DSLR.<p/>
-7) Add banner to montage.  Maybe include a hashtag in the image.<p/>
+2) <strike>Fix code to only take 4 pictures.  The code take 5 pictures but only displays 4.  I suspect there is a bug in the loop while taking pictures.</strike><p/>
+3) <strike>Comment out the GIF creation code or put in a variable to switch this on and off as needed.</strike><p/>
+4) <strike>dd code to create a montage image from the 4 images that are created.  Add comment in the #of pictures taken variable to alert a user that the montage expects 4 images.</strike><p/>
+5) Include code to use DSLR.<p/>
 
 Parking lot for future enhancements:<p/>
 1) Have montage be flexible for however many pictures are being selected.  Maybe give users options 2, 4, and 6 picture montages.<p/>
