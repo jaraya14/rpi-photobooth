@@ -29,6 +29,7 @@ button2_pin = 18 # pin for button to shutdown the pi
 button3_pin = 16 # pin for button to end the program, but not shutdown the pi
 
 post_online = 0 # default 1. Change to 0 if you don't want to upload pics.
+create_montage = 1 #default 1. Change to 0 if you don't want the montage created.
 create_gif = 0 # default 1. Change to 0 if you don't want the GIF created.  Must be 1 if you want post online to work.
 total_pics = 4 # number of pics to be taken
 capture_delay = 2 # delay between pics
@@ -205,6 +206,11 @@ def start_photobooth():
         camera.stop_preview()
         camera.close()
     ########################### Begin Step 3 #################################
+    if create_montage:#Added code to set option for creating a montage
+      montage_source = config.file_path + now + '*.jpg'  # Argument for input files.
+      montage_image = config.montage_destination + now + '-montage.jpg' #Set location and name for montage image after processing.
+      montage_call = 'montage ' + montage_source +' -tile 2x2 -geometry +0+0 -resize 50% ' + montage_image # Create Montage command
+      os.system(montage_call) #Call montage command in a subprocess to the system command line.
     if create_gif:#Added code to turn off GIF creation
       print "Creating an animated gif" 
       if post_online:
