@@ -272,9 +272,9 @@ GPIO.add_event_detect(button3_pin, GPIO.FALLING, callback=exit_photobooth, bounc
 #GPIO.add_event_detect(button3_pin, GPIO.FALLING, callback=clear_pics, bouncetime=300) #use the third button to clear pics stored on the SD card from previous events
 
 # delete files in folder on startup
-files = glob.glob(config.file_path + '*')
-for f in files:
-    os.remove(f)
+#files = glob.glob(config.file_path + '*')
+#for f in files:
+#    os.remove(f)
 
 print "Photo booth app running..." 
 GPIO.output(led1_pin,True); #light up the lights to show the app is running
