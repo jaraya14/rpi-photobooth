@@ -18,14 +18,14 @@ Inteded Changes for this branch:
 4) <strike>Add code to create a montage image from the 4 images that are created.  Add comment in the #of pictures taken variable to alert a user that the montage expects 4 images.</strike><p/>
 5) Include code to use DSLR.<p/>
 
-Parking lot for future enhancements:<p/>
+<h1>Parking lot for future enhancements:</h1><p/>
 1) Have montage be flexible for however many pictures are being selected.  Maybe give users options 2, 4, and 6 picture montages.<p/>
 2) Add variable to switch between piCamera and DSLR input.<p/>
 3) Add integration with instagram and option to post montages to instagram.  Also add a variable to use as the hashtag.  Ideally there would be a user input to ask if the montage should be posted to instagram.<p/>
 <p/>
 <p/>
 <p/>
-New ideas after using the photobooth @ party.<p/>
+<h1>New ideas after using the photobooth @ party.</h1><p/>
 1) Make the photobooth fully automated.  Plug in and things are running.  I think the only thing needed for this is to start up the photobooth program automatically. <p/>
 2) Explore what it would take to print pictures.  How complicated is it and how complex would it be to have this be unmanned?
 3) Explore use of a DSLR or better camera.<p/>
